@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven.apache.org/xsd-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.atlasdb</groupId>
+        <artifactId>atlasdb-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>atlas-tests</artifactId>
+    <name>AtlasDB Tests</name>
+    <description>Unit and integration tests for AtlasDB</description>
+
+    <dependencies>
+        <!-- Custom Modules -->
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-storage</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-network</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-transaction</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-sql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-cluster</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-replication</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-raft</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-backup</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.atlasdb</groupId>
+            <artifactId>atlas-monitoring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+    </dependencies>
+</project>

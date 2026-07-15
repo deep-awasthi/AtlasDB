@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  node1:
+    build:
+      context: ../
+      dockerfile: deployment/Dockerfile
+    container_name: atlasdb-node1
+    environment:
+      - NODE_ID=node1
+      - HOST=node1
+      - CLIENT_PORT=8601
+      - CLUSTER_PORT=9601
+      - MONITORING_PORT=7601
+      - SEEDS=node1:9601,node2:9602,node3:9603
+      - DATA_DIR=/var/lib/atlasdb/data
+    ports:
+      - "8601:8601"
+      - "7601:7601"
+    volumes:
+      - node1-data:/var/lib/atlasdb
+    networks:
+      - atlas-net
+
+  node2:
+    build:
+      context: ../
+      dockerfile: deployment/Dockerfile
+    container_name: atlasdb-node2
+    environment:
+      - NODE_ID=node2
+      - HOST=node2
+      - CLIENT_PORT=8602
+      - CLUSTER_PORT=9602
+      - MONITORING_PORT=7602
+      - SEEDS=node1:9601,node2:9602,node3:9603
+      - DATA_DIR=/var/lib/atlasdb/data
+    ports:
+      - "8602:8602"
+      - "7602:7602"
+    volumes:
+      - node2-data:/var/lib/atlasdb
+    networks:
+      - atlas-net
+
+  node3:
+    build:
+      context: ../
+      dockerfile: deployment/Dockerfile
+    container_name: atlasdb-node3
+    environment:
+      - NODE_ID=node3
+      - HOST=node3
+      - CLIENT_PORT=8603
+      - CLUSTER_PORT=9603
+      - MONITORING_PORT=7603
+      - SEEDS=node1:9601,node2:9602,node3:9603
+      - DATA_DIR=/var/lib/atlasdb/data
+    ports:
+      - "8603:8603"
+      - "7603:7603"
+    volumes:
+      - node3-data:/var/lib/atlasdb
+    networks:
+      - atlas-net
+
+volumes:
+  node1-data:
+  node2-data:
+  node3-data:
+
+networks:
+  atlas-net:
+    driver: bridge

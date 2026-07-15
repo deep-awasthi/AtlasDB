@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: atlasdb-headless
+  labels:
+    app: atlasdb
+spec:
+  ports:
+    - name: client
+      port: 8601
+    - name: cluster
+      port: 9601
+    - name: monitoring
+      port: 7601
+  clusterIP: None
+  selector:
+    app: atlasdb
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: atlasdb
+spec:
+  serviceName: atlasdb-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: atlasdb
+  template:
+    metadata:
+      labels:
+        app: atlasdb
+    spec:
+      containers:
+        - name: atlasdb
+          image: atlasdb:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: CLIENT_PORT
+              value: "8601"
+            - name: CLUSTER_PORT
+              value: "9601"
+            - name: MONITORING_PORT
+              value: "7601"
+            - name: SEEDS
+              value: "atlasdb-0.atlasdb-headless.default.svc.cluster.local:9601,atlasdb-1.atlasdb-headless.default.svc.cluster.local:9601,atlasdb-2.atlasdb-headless.default.svc.cluster.local:9601"
+            - name: DATA_DIR
+              value: "/var/lib/atlasdb/data"
+          ports:
+            - name: client
+              containerPort: 8601
+            - name: cluster
+              containerPort: 9601
+            - name: monitoring
+              containerPort: 7601
+          readinessProbe:
+            httpGet:
+              path: /health/readiness
+              port: 7601
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health/liveness
+              port: 7601
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          volumeMounts:
+            - name: atlasdb-data
+              mountPath: /var/lib/atlasdb
+  volumeClaimTemplates:
+    - metadata:
+        name: atlasdb-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
